@@ -1,0 +1,43 @@
+@import '../core/variables';
+@import '../core/mixins';
+
+
+.header {
+    position: relative;
+    border-bottom: dotted 0.1rem $color-primary2;
+    padding: 10px 10px 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-family: $font-main;
+    font-weight: 700;
+
+    @include Tablet() {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title {
+        padding-top: .45rem;
+
+
+    }
+
+    &__subtitle {
+        color: $color-secondary3;
+        font-size: 0.8rem;
+        font-style: italic;
+        font-weight: normal;
+
+    }
+
+    &--logo {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+}

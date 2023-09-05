@@ -3,7 +3,7 @@
 
 console.log('>> Ready :)');
 
-const productItem = document.querySelector('.js-products');
+const productItemList = document.querySelector('.js-products');
 
 let productsList = [];
 
@@ -16,7 +16,7 @@ const getApiData = () => {
     });
 };
 
-const getProductHtml = (product) => {
+const renderOneProduct = (product) => {
   let html = '';
   html += `<article class="card">`;
   html += `  <img src="${product.imageUrl}" class="card__img" alt="Product: ${product.name}">`;
@@ -28,11 +28,12 @@ const getProductHtml = (product) => {
 };
 
 const renderProductList = () => {
-  let productsCode = '';
-  for (const product of productsList) {
-    productsCode += getProductHtml(product);
+  productItemList.innerHTML = '';
+  for (const eachProduct of productsList) {
+    productItemList.innerHTML += renderOneProduct(eachProduct);
   }
-  productItem.innerHTML = productsCode;
 };
+/*
+ */
 
 getApiData();

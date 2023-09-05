@@ -4,26 +4,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SP Web Starter Kit</title>
+  <title>Adalab T-shirt shop</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,700;1,400&family=Merriweather+Sans:wght@700&family=Montserrat:ital,wght@0,100;0,700;0,800;0,900;1,100;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="http://beta.adalab.es/resources/stylesheets/all.css">
   <link rel="icon" href="./assets/images/faviconSP.png" />
 </head>
 
 <body>
   <div class="page">
     <header class="header">
-        <h1 class="header__title"> Hello world! </h1>
+        <h1 class="header__title"> T-shirt shop </h1>
         <h2 class="header__subtitle">Open console!</h2>
     </header>
-    <main class="main">
-        <h4 class="main__title">Land ahoy!</h4>
-        <p class="main__text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur praesentium accusantium
-            quas explicabo
-            molestiae eos voluptatem exercitationem, nam delectus quis itaque ipsa nulla accusamus. Asperiores dolorum
-            recusandae ipsum porro nisi!</p>
+    <main class="main page col2">
+        <div>
+            <h2 class="title--medium">T-shirt catalogue </h2>
+            <section class="js-products cards"></section>
+        </div>
+
+        <div>
+            <h2 class="title--medium">Shopping cart</h2>
+            <table class="table">
+                <thead>
+                    <tr class="text--bold">
+                        <td>Product</td>
+                        <td>Price</td>
+                        <td>Units</td>
+                        <td class="text-align-right">Total</td>
+                    </tr>
+                </thead>
+                <tbody class="js-cart"></tbody>
+            </table>
+        </div>
+
     </main>
     <footer class="footer">
         <span class="footer__text">

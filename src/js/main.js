@@ -7,7 +7,7 @@ const productItemList = document.querySelector('.js-products');
 const productCartList = document.querySelector('.js-cart');
 
 let productsList = [];
-let shoppintCartList = [];
+let shoppingCartList = [];
 
 const getApiData = () => {
   fetch('../api/data.json')
@@ -42,21 +42,41 @@ getApiData();
 
 const addEventBtn = () => {
   const btnProductList = document.querySelectorAll('.js-add-btn');
-  //addBtn.addEventListener('click', handleClick);
   for (const btn of btnProductList) {
-    btn.addEventListener('click', handleClick);
+    btn.addEventListener('click', handleAddBtn);
   }
 };
 
-const handleClick = (ev) => {
+const handleAddBtn = (ev) => {
   ev.preventDefault();
   const productId = ev.target.id;
-  const selectedProduct = productsList.find((item) => item.id === productId);
-  console.log(selectedProduct);
-  shoppintCartList.push(selectedProduct);
+  console.log(productId);
+  // Find if the product already exists in the shopping cart
+  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
+  if (selectedProduct === undefined) {
+    // If product doesn't exist, search for the clicked product to add it into cart
+    let productToCart = productsList.find((item) => item.id === productId);
+    shoppingCartList.push({
+      id: productToCart.id,
+      name: productToCart.name,
+      price: productToCart.price,
+      quantity: 1,
+    });
+  } else {
+    selectedProduct.quantity += 1;
+  }
   renderShoppingCartProducts();
-  renderTotalTable();
 };
+
+// const incrProductQty = () => {
+//   const productId = ev.target.id;
+//   const selectedProduct = productsList.find((item) => item.id === productId);
+//   if () {
+
+//   } else {
+
+//   }
+// };
 
 const renderCardProduct = (product) => {
   let html = ``;
@@ -75,21 +95,7 @@ const renderCardProduct = (product) => {
   return html;
 };
 
-const renderShoppingCartProducts = () => {
-  productCartList.innerHTML = '';
-  for (const eachCartProduct of shoppintCartList) {
-    productCartList.innerHTML += renderCardProduct(eachCartProduct);
-  }
-};
-const getTotalPrice = () => {
-  let total = 0;
-  for (const item of shoppintCartList) {
-    total += item.price * item.quantity;
-  }
-  return total;
-};
-
-const renderTotalTable = () => {
+const renderTotalRowTable = () => {
   let html = '';
   html += `<tr class="text--bold">`;
   html += `  <td>Total</td>`;
@@ -98,19 +104,18 @@ const renderTotalTable = () => {
   return html;
 };
 
-/* const getCartTotalHtmlCode = () => {
-  let htmlCode = '';
-  htmlCode += `<tr class="text--bold">`;
-  htmlCode += `  <td>Total</td>`;
-  htmlCode += `  <td colspan="3" class="text-align-right">${getTotalPrice()}€</td>`;
-  htmlCode += `</tr>`;
-  return htmlCode;
-};
-
 const getTotalPrice = () => {
   let total = 0;
-  for (const item of cart) {
+  for (const item of shoppingCartList) {
     total += item.price * item.quantity;
   }
   return total;
-};*/
+};
+
+const renderShoppingCartProducts = () => {
+  productCartList.innerHTML = '';
+  for (const eachCartProduct of shoppingCartList) {
+    productCartList.innerHTML += renderCardProduct(eachCartProduct);
+  }
+  productCartList.innerHTML += renderTotalRowTable();
+};

@@ -4,7 +4,6 @@
 console.log('>> Ready :)');
 
 const productItemList = document.querySelector('.js-products');
-const addBtn = document.querySelector('.js-add-product');
 
 let productsList = [];
 
@@ -23,7 +22,7 @@ const renderOneProduct = (product) => {
   html += `  <img src="${product.imageUrl}" class="card__img" alt="Product: ${product.name}">`;
   html += `  <h3 class="card__title">${product.name}</h3>`;
   html += `  <p class="card__description">${product.price} €</p>`;
-  html += `  <button class="js-add-product card__btn" data-id="${product.id}">Add to cart</button>`;
+  html += `  <button class="js-add-btn card__btn" data-id="${product.id}">Add to cart</button>`;
   html += `</article></li>`;
   return html;
 };
@@ -33,7 +32,20 @@ const renderProductList = () => {
   for (const eachProduct of productsList) {
     productItemList.innerHTML += renderOneProduct(eachProduct);
   }
+  addEventBtn();
 };
 
 getApiData();
-/* */
+
+const addEventBtn = () => {
+  const btnProductList = document.querySelectorAll('.js-add-btn');
+  //addBtn.addEventListener('click', handleClick);
+  for (const btn of btnProductList) {
+    btn.addEventListener('click', handleClick);
+  }
+};
+
+const handleClick = (ev) => {
+  ev.preventDefault();
+  console.log(`I've clicked the button`);
+};

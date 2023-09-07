@@ -1,22 +1,22 @@
 'use strict';
-/* */
-
-console.log('>> Ready :)');
-
-const productItemList = document.querySelector('.js-products');
-const productCartList = document.querySelector('.js-cart');
 
 let productsList = [];
 let shoppingCartList = [];
 
-const getApiData = () => {
-  fetch('../api/data.json')
-    .then((response) => response.json())
-    .then((data) => {
-      productsList = data.cart.items;
-      renderProductList(productsList);
-      console.log(data.cart.items);
-    });
+const runPage = () => {
+  const localStorageProducts = JSON.parse(localStorage.getItem('products'));
+  if (localStorageProducts) {
+    productsList = localStorageProducts;
+    renderProductList(productsList);
+  } else {
+    fetch('../api/data.json')
+      .then((response) => response.json())
+      .then((data) => {
+        productsList = data.cart.items;
+        localStorage.setItem('products', JSON.stringify(productsList));
+        renderProductList(productsList);
+      });
+  }
 };
 
 const renderOneProduct = (product) => {
@@ -31,14 +31,13 @@ const renderOneProduct = (product) => {
 };
 
 const renderProductList = () => {
+  const productItemList = document.querySelector('.js-products');
   productItemList.innerHTML = '';
   for (const eachProduct of productsList) {
     productItemList.innerHTML += renderOneProduct(eachProduct);
   }
   addEventBtn();
 };
-
-getApiData();
 
 const addEventBtn = () => {
   const btnProductList = document.querySelectorAll('.js-add-btn');
@@ -50,7 +49,6 @@ const addEventBtn = () => {
 const handleAddBtn = (ev) => {
   ev.preventDefault();
   const productId = ev.target.id;
-  console.log(productId);
   // Find if the product already exists in the shopping cart
   let selectedProduct = shoppingCartList.find((item) => item.id === productId);
   if (selectedProduct === undefined) {
@@ -65,18 +63,45 @@ const handleAddBtn = (ev) => {
   } else {
     selectedProduct.quantity += 1;
   }
+  setCartInLocalStorage();
   renderShoppingCartProducts();
 };
 
-// const incrProductQty = () => {
-//   const productId = ev.target.id;
-//   const selectedProduct = productsList.find((item) => item.id === productId);
-//   if () {
+const listenCartBtns = () => {
+  const incrBtnList = document.querySelectorAll('.js-incr-btn');
+  for (const btn of incrBtnList) {
+    btn.addEventListener('click', handleIncrBtn);
+  }
+  const decrBtnList = document.querySelectorAll('.js-decr-btn');
+  for (const btn of decrBtnList) {
+    btn.addEventListener('click', handleDecrBtn);
+  }
+};
 
-//   } else {
+const handleIncrBtn = (ev) => {
+  ev.preventDefault();
+  const productId = ev.target.id;
+  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
+  selectedProduct.quantity += 1;
+  setCartInLocalStorage();
+  renderShoppingCartProducts();
+};
 
-//   }
-// };
+const handleDecrBtn = (ev) => {
+  ev.preventDefault();
+  const productId = ev.target.id;
+  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
+  const indexProduct = shoppingCartList.findIndex(
+    (item) => item.id === productId
+  );
+  if (selectedProduct.quantity > 1) {
+    selectedProduct.quantity += -1;
+  } else {
+    shoppingCartList.splice(indexProduct, 1);
+  }
+  setCartInLocalStorage();
+  renderShoppingCartProducts();
+};
 
 const renderCardProduct = (product) => {
   let html = ``;
@@ -84,9 +109,9 @@ const renderCardProduct = (product) => {
   html += `  <td>${product.name}</td>`;
   html += `  <td>${product.price}</td>`;
   html += `  <td>`;
-  html += `    <button class="js-dec-btn card__btn" data-id="${product.id}">-</button>`;
+  html += `    <button class="js-decr-btn card__btn" id="${product.id}">-</button>`;
   html += `    ${product.quantity}`;
-  html += `    <button class="js-inc-btn card__btn" data-id="${product.id}">+</button>`;
+  html += `    <button class="js-incr-btn card__btn" id="${product.id}">+</button>`;
   html += `  </td>`;
   html += `  <td class="text-align-right">${
     product.price * product.quantity
@@ -113,9 +138,28 @@ const getTotalPrice = () => {
 };
 
 const renderShoppingCartProducts = () => {
+  const productCartList = document.querySelector('.js-cart');
   productCartList.innerHTML = '';
   for (const eachCartProduct of shoppingCartList) {
     productCartList.innerHTML += renderCardProduct(eachCartProduct);
   }
   productCartList.innerHTML += renderTotalRowTable();
+  listenCartBtns();
 };
+
+const getCartFromLocalStorage = () => {
+  const localStorageCart = localStorage.getItem('cart');
+  if (localStorageCart !== null) {
+    shoppingCartList = JSON.parse(localStorageCart);
+    renderShoppingCartProducts();
+  }
+};
+
+const setCartInLocalStorage = () => {
+  const lsStringifyCart = JSON.stringify(shoppingCartList);
+  localStorage.setItem('cart', lsStringifyCart);
+};
+
+getCartFromLocalStorage();
+runPage();
+renderShoppingCartProducts();

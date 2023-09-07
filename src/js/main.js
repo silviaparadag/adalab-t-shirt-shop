@@ -40,10 +40,7 @@ const renderProductList = () => {
 };
 
 const addEventBtn = () => {
-  const btnProductList = document.querySelectorAll('.js-add-btn');
-  for (const btn of btnProductList) {
-    btn.addEventListener('click', handleAddBtn);
-  }
+  listenEventsBtns('.js-add-btn', handleAddBtn);
 };
 
 const handleAddBtn = (ev) => {
@@ -68,14 +65,8 @@ const handleAddBtn = (ev) => {
 };
 
 const listenCartBtns = () => {
-  const incrBtnList = document.querySelectorAll('.js-incr-btn');
-  for (const btn of incrBtnList) {
-    btn.addEventListener('click', handleIncrBtn);
-  }
-  const decrBtnList = document.querySelectorAll('.js-decr-btn');
-  for (const btn of decrBtnList) {
-    btn.addEventListener('click', handleDecrBtn);
-  }
+  listenEventsBtns('.js-incr-btn', handleIncrBtn);
+  listenEventsBtns('.js-decr-btn', handleDecrBtn);
 };
 
 const handleIncrBtn = (ev) => {
@@ -158,6 +149,13 @@ const getCartFromLocalStorage = () => {
 const setCartInLocalStorage = () => {
   const lsStringifyCart = JSON.stringify(shoppingCartList);
   localStorage.setItem('cart', lsStringifyCart);
+};
+
+const listenEventsBtns = (classSelectorJs, handleClick) => {
+  const btnList = document.querySelectorAll(classSelectorJs);
+  for (const btn of btnList) {
+    btn.addEventListener('click', handleClick);
+  }
 };
 
 getCartFromLocalStorage();

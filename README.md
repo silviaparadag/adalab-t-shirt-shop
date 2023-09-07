@@ -1,85 +1,46 @@
 # adalab-t-shirt-shop
 
-**## Guía de inicio rápido**
 
-> ****NOTA:**** Necesitas tener instalado [Node JS](https://nodejs.org/)
+**## Quick Start Guide**
+This repository is a bootcamp exercise.
 
-1. ****Instala las dependencias**** locales ejecutando en la terminal el comando:
+
+## 🛠 | Built With
+
+- HTML
+- SCSS
+- JAVA SCRIPT
+
+## -- Getting Started 💪🏼 --
+
+1. Clone the repo:
+   `git clone https://github.com/LaiaRuizM/personal_project_AmznWeb.git`
+
+1. Install NPM packages & dependencies:
+   `npm install`
+
+1. Start the project:
+   `npm start`
+
+> **Note** In this exercise, we can find the following files and folders:
+
+1. The folder 📂 `src/` is the files of this web page: HTML, SCSS, JavaScript and images.
+2. The folders 📚 `public/` and `docs/`, are generated automatically when we start the project. GULP reads the files found in the src/ folder, processes them and then generates them inside `public/` and `docs/`.
+3. Other 📝 files found in the repository root as 'gulpfile.js', 'package.json', etc. are configuration files and we don't need to modify them.
+
+#### -- How to publish the project on GitHub Pages? --
+
+To generate your page for production run the command:
 
 ```bash
-
-npm install
-
+npm run docs
 ```
 
-**### Pasos para arrancar el proyecto:**
+Next:
 
-Para ello ejecuta el comando:
+1. In the explorer, a folder called `docs/` will have been created. If it doesn't appear at first, refresh!
+2. In the terminal put git add -A, git commit -m "run docs" and git push.
+3. Go to the `settings` tab of your repo -> "code and automation" -> in the GitHub Pages section enable the **master branch /docs folder** -> save -> refresh. (IMPORTANT!).
+3. It may take a while to create it, because of the deploy. Once the URL has been generated, you can submit it.
+4. As a recommendation: Add this URL on the main page of the project, in the ABOUT section.
 
-```bash
-
-npm start
-
-```
-
-Este comando:
-
-- ***Abre una ventana de Chrome y muestra tu página web****, al igual que hace el plugin de VS Code Live Server (Go live).
-- También ***observa****todos los ficheros que hay dentro de la carpeta `src/`, para que cada vez que modifiques un fichero ***refresca tu página en Chrome****.
-- También ***procesa los ficheros**** HTML, SASS / CSS y JS y los ***genera y guarda en la carpeta `public/`***. Por ejemplo:
-
-- Convierte los ficheros SASS en CSS.
-
-- Combina los diferentes ficheros de HTML y los agrupa en uno o varios ficheros HTML.
-
-Después de ejecutar `npm start` ya puedes empezar a editar todos los ficheros que están dentro de la carpeta `src/` y programar cómodamente.
-
-**## Flujo de archivos con Gulp**
-
-Estas tareas de Gulp producen el siguiente flujo de archivos:
-
-![Gulp flow](./gulp-flow.png)
-
-**## `gulpfile.js` y `config.json`**
-
-Nuestro ****gulpfile.js**** usa el fichero `config.json` de configuración con las rutas de los archivos a generar / observar.
-
-De esta manera separarmos las acciones que están en `gulpfile.js` de la configuración de las acciones que están en `config.json`.
-
-**## Estructura de carpetas**
-
-La estructura de carpetas tiene esta pinta:
-
-```
-
-src
-
-├─ api // los ficheros de esta carpeta se copian en public/api/
-
-|  └─ data.json
-
-├─ images
-
-|  └─ logo.jpg
-
-├─ js // los ficheros de esta carpeta se concatenan en el fichero main.js y este se guarda en public/main.js
-
-|  ├─ main.js
-
-|  └─ events.js
-
-├─ scss
-
-|  ├─ components
-
-|  ├─ core
-
-|  ├─ layout
-
-|  └─ pages
-
-└─ html
-
-└─ partials
-
-```

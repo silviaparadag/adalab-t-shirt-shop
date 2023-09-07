@@ -3,20 +3,106 @@
 let productsList = [];
 let shoppingCartList = [];
 
-const runPage = () => {
-  const localStorageProducts = JSON.parse(localStorage.getItem('products'));
-  if (localStorageProducts) {
-    productsList = localStorageProducts;
-    renderProductList(productsList);
+const startPage = () => {
+  getProductsFromLocalStorage();
+  getCartFromLocalStorage();
+  renderShoppingCartProducts();
+  getApiData();
+};
+
+const getApiData = () => {
+  fetch('../api/data.json')
+    .then((response) => response.json())
+    .then((data) => {
+      productsList = data.cart.items;
+      localStorage.setItem('products', JSON.stringify(productsList));
+      renderProductList(productsList);
+    });
+};
+
+const handleAddBtn = (ev) => {
+  const productId = ev.target.id;
+  // Find if the product already exists in the shopping cart
+  const selectedProduct = foundProduct(productId);
+  if (selectedProduct === undefined) {
+    // If product doesn't exist, search for the clicked product to add it into cart
+    addProductToCart(productId);
   } else {
-    fetch('../api/data.json')
-      .then((response) => response.json())
-      .then((data) => {
-        productsList = data.cart.items;
-        localStorage.setItem('products', JSON.stringify(productsList));
-        renderProductList(productsList);
-      });
+    incrQuantity(productId);
   }
+  setCartInLocalStorage();
+  renderShoppingCartProducts();
+};
+
+const addProductToCart = (productId) => {
+  const productToCart = productsList.find((item) => item.id === productId);
+  shoppingCartList.push({
+    id: productToCart.id,
+    name: productToCart.name,
+    price: productToCart.price,
+    quantity: 1,
+  });
+};
+
+const handleIncrBtn = (ev) => {
+  const productId = ev.target.id;
+  incrQuantity(productId);
+  setCartInLocalStorage();
+  renderShoppingCartProducts();
+};
+
+const handleDecrBtn = (ev) => {
+  const productId = ev.target.id;
+  const selectedProduct = foundProduct(productId);
+  if (selectedProduct.quantity > 1) {
+    decrQuantity(productId);
+  } else {
+    const indexProduct = shoppingCartList.findIndex(
+      (item) => item.id === productId
+    );
+    shoppingCartList.splice(indexProduct, 1);
+  }
+  setCartInLocalStorage();
+  renderShoppingCartProducts();
+};
+
+const foundProduct = (id) => {
+  return shoppingCartList.find((item) => item.id === id);
+};
+
+const incrQuantity = (productId) => {
+  const selectedProduct = foundProduct(productId);
+  selectedProduct.quantity += 1;
+};
+
+const decrQuantity = (productId) => {
+  const selectedProduct = foundProduct(productId);
+  selectedProduct.quantity -= 1;
+};
+
+const getTotalPrice = () => {
+  return shoppingCartList.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+};
+
+const addEventBtn = () => {
+  listenEventsBtns('.js-add-btn', handleAddBtn);
+};
+
+const listenCartBtns = () => {
+  listenEventsBtns('.js-incr-btn', handleIncrBtn);
+  listenEventsBtns('.js-decr-btn', handleDecrBtn);
+};
+
+const renderProductList = () => {
+  const productItemList = document.querySelector('.js-products');
+  productItemList.innerHTML = '';
+  for (const eachProduct of productsList) {
+    productItemList.innerHTML += renderOneProduct(eachProduct);
+  }
+  addEventBtn();
 };
 
 const renderOneProduct = (product) => {
@@ -30,80 +116,17 @@ const renderOneProduct = (product) => {
   return html;
 };
 
-const renderProductList = () => {
-  const productItemList = document.querySelector('.js-products');
-  productItemList.innerHTML = '';
-  for (const eachProduct of productsList) {
-    productItemList.innerHTML += renderOneProduct(eachProduct);
+const renderShoppingCartProducts = () => {
+  const productCartList = document.querySelector('.js-cart');
+  productCartList.innerHTML = '';
+  for (const eachCartProduct of shoppingCartList) {
+    productCartList.innerHTML += renderCartProduct(eachCartProduct);
   }
-  addEventBtn();
+  productCartList.innerHTML += renderTotalRowTable();
+  listenCartBtns();
 };
 
-const addEventBtn = () => {
-  const btnProductList = document.querySelectorAll('.js-add-btn');
-  for (const btn of btnProductList) {
-    btn.addEventListener('click', handleAddBtn);
-  }
-};
-
-const handleAddBtn = (ev) => {
-  ev.preventDefault();
-  const productId = ev.target.id;
-  // Find if the product already exists in the shopping cart
-  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
-  if (selectedProduct === undefined) {
-    // If product doesn't exist, search for the clicked product to add it into cart
-    let productToCart = productsList.find((item) => item.id === productId);
-    shoppingCartList.push({
-      id: productToCart.id,
-      name: productToCart.name,
-      price: productToCart.price,
-      quantity: 1,
-    });
-  } else {
-    selectedProduct.quantity += 1;
-  }
-  setCartInLocalStorage();
-  renderShoppingCartProducts();
-};
-
-const listenCartBtns = () => {
-  const incrBtnList = document.querySelectorAll('.js-incr-btn');
-  for (const btn of incrBtnList) {
-    btn.addEventListener('click', handleIncrBtn);
-  }
-  const decrBtnList = document.querySelectorAll('.js-decr-btn');
-  for (const btn of decrBtnList) {
-    btn.addEventListener('click', handleDecrBtn);
-  }
-};
-
-const handleIncrBtn = (ev) => {
-  ev.preventDefault();
-  const productId = ev.target.id;
-  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
-  selectedProduct.quantity += 1;
-  setCartInLocalStorage();
-  renderShoppingCartProducts();
-};
-
-const handleDecrBtn = (ev) => {
-  ev.preventDefault();
-  const productId = ev.target.id;
-  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
-  const indexProduct = shoppingCartList.findIndex(
-    (item) => item.id === productId
-  );
-  if (selectedProduct.quantity > 1) {
-    selectedProduct.quantity += -1;
-  } else {
-    shoppingCartList.splice(indexProduct, 1);
-  }
-  setCartInLocalStorage();
-  renderShoppingCartProducts();
-};
-
-const renderCardProduct = (product) => {
+const renderCartProduct = (product) => {
   let html = ``;
   html += `<tr>`;
   html += `  <td>${product.name}</td>`;
@@ -129,22 +152,12 @@ const renderTotalRowTable = () => {
   return html;
 };
 
-const getTotalPrice = () => {
-  let total = 0;
-  for (const item of shoppingCartList) {
-    total += item.price * item.quantity;
+const getProductsFromLocalStorage = () => {
+  const localStorageProducts = localStorage.getItem('products');
+  if (localStorageProducts !== null) {
+    productsList = JSON.parse(localStorageProducts);
+    renderProductList(productsList);
   }
-  return total;
-};
-
-const renderShoppingCartProducts = () => {
-  const productCartList = document.querySelector('.js-cart');
-  productCartList.innerHTML = '';
-  for (const eachCartProduct of shoppingCartList) {
-    productCartList.innerHTML += renderCardProduct(eachCartProduct);
-  }
-  productCartList.innerHTML += renderTotalRowTable();
-  listenCartBtns();
 };
 
 const getCartFromLocalStorage = () => {
@@ -160,6 +173,11 @@ const setCartInLocalStorage = () => {
   localStorage.setItem('cart', lsStringifyCart);
 };
 
-getCartFromLocalStorage();
-runPage();
-renderShoppingCartProducts();
+const listenEventsBtns = (classSelectorJs, handleClick) => {
+  const btnList = document.querySelectorAll(classSelectorJs);
+  for (const btn of btnList) {
+    btn.addEventListener('click', handleClick);
+  }
+};
+
+startPage();

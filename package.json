@@ -4,6 +4,7 @@
 	"description": "Adalab web starter kit",
 	"dependencies": {
 		"browser-sync": "^2.26.12",
+		"chrome": "^0.1.0",
 		"del": "^5.1.0",
 		"eslint": "^7.1.0",
 		"gulp": "^4.0.2",
@@ -20,7 +21,8 @@
 		"gulp-uglify-es": "^2.0.0",
 		"gulp-zip": "*",
 		"node-sass": "^8.0.0",
-		"run-sequence": "*"
+		"run-sequence": "*",
+		"set-default-browser": "^1.1.2"
 	},
 	"devDependencies": {
 		"lodash.template": ">=4.5.0"
@@ -37,5 +39,6 @@
 	},
 	"author": "Adalab",
 	"license": "MIT",
-	"homepage": "https://github.com/adalab/adalab-web-starter-kit"
+	"homepage": "https://github.com/adalab/adalab-web-starter-kit",
+	"start": "cross-env BROWSER=chrome react-scripts start"
 }

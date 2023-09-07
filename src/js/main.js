@@ -47,7 +47,9 @@ const handleAddBtn = (ev) => {
   ev.preventDefault();
   const productId = ev.target.id;
   // Find if the product already exists in the shopping cart
-  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
+  const selectedProduct = shoppingCartList.find(
+    (item) => item.id === productId
+  );
   if (selectedProduct === undefined) {
     // If product doesn't exist, search for the clicked product to add it into cart
     let productToCart = productsList.find((item) => item.id === productId);
@@ -72,7 +74,9 @@ const listenCartBtns = () => {
 const handleIncrBtn = (ev) => {
   ev.preventDefault();
   const productId = ev.target.id;
-  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
+  const selectedProduct = shoppingCartList.find(
+    (item) => item.id === productId
+  );
   selectedProduct.quantity += 1;
   setCartInLocalStorage();
   renderShoppingCartProducts();
@@ -81,7 +85,9 @@ const handleIncrBtn = (ev) => {
 const handleDecrBtn = (ev) => {
   ev.preventDefault();
   const productId = ev.target.id;
-  let selectedProduct = shoppingCartList.find((item) => item.id === productId);
+  const selectedProduct = shoppingCartList.find(
+    (item) => item.id === productId
+  );
   const indexProduct = shoppingCartList.findIndex(
     (item) => item.id === productId
   );
@@ -121,11 +127,10 @@ const renderTotalRowTable = () => {
 };
 
 const getTotalPrice = () => {
-  let total = 0;
-  for (const item of shoppingCartList) {
-    total += item.price * item.quantity;
-  }
-  return total;
+  return shoppingCartList.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 };
 
 const renderShoppingCartProducts = () => {
